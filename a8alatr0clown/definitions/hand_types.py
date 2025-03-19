@@ -1,7 +1,9 @@
 from enum import IntEnum
 
+
 class HandType(IntEnum):
     """The different hand types that exist"""
+
     HIGH_CARD = 1
     PAIR = 2
     TWO_PAIR = 3

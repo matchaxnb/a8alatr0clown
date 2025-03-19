@@ -1,7 +1,10 @@
 from __future__ import annotations
 from enum import IntEnum
+
+
 class CardSuit(IntEnum):
     """The different card suits that exist"""
+
     SPADE = 1
     HEART = 2
     CLUB = 3
@@ -9,17 +12,29 @@ class CardSuit(IntEnum):
 
     @property
     def symbol(self):
-        if self == CardSuit.SPADE:
+        if self == CardSuit.CLUB:
             return "♣"
-        elif self == CardSuit.CLUB:
+        elif self == CardSuit.SPADE:
             return "♠"
         elif self == CardSuit.DIAMOND:
             return "♦"
         elif self == CardSuit.HEART:
             return "♥"
-        
+
+    @classmethod
+    def from_symbol(cls, symbol: str) -> CardSuit:
+        map_symbols = {
+            "♣": CardSuit.CLUB,
+            "♠": CardSuit.SPADE,
+            "♦": CardSuit.DIAMOND,
+            "♥": CardSuit.HEART,
+        }
+        return map_symbols[symbol]
+
+
 class CardRank(IntEnum):
     """The different ranks a card may have"""
+
     ACE = 1
     TWO = 2
     THREE = 3
@@ -46,3 +61,22 @@ class CardRank(IntEnum):
             return "J"
         else:
             return str(self.value)
+
+    @classmethod
+    def from_symbol(cls, symbol: str) -> CardRank:
+        map_symbols = {
+            "A": CardRank.ACE,
+            "K": CardRank.KING,
+            "Q": CardRank.QUEEN,
+            "J": CardRank.JACK,
+            "10": CardRank.TEN,
+            "9": CardRank.NINE,
+            "8": CardRank.EIGHT,
+            "7": CardRank.SEVEN,
+            "6": CardRank.SIX,
+            "5": CardRank.FIVE,
+            "4": CardRank.FOUR,
+            "3": CardRank.THREE,
+            "2": CardRank.TWO,
+        }
+        return map_symbols[symbol]

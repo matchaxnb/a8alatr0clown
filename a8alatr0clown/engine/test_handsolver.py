@@ -40,6 +40,7 @@ FIVE_OF_A_KIND = HandType.FIVE_OF_A_KIND
 FLUSH_HOUSE = HandType.FLUSH_HOUSE
 FLUSH_FIVE = HandType.FLUSH_FIVE
 
+
 def _generate_card_fixtures() -> dict:
     return {
         "ACP": Card(CLUB, ACE, POLY),
@@ -56,10 +57,8 @@ def _generate_card_fixtures() -> dict:
         "3CF": Card(CLUB, THREE, FOIL),
         "4CF": Card(CLUB, FOUR, FOIL),
         "4CH": Card(CLUB, FOUR, HOLO),
-
         "5HP": Card(HEART, FIVE, POLY),
         "5CH": Card(CLUB, FIVE, HOLO),
-
         # Additional cards for expanded test cases
         "ADB": Card(DIAMOND, ACE, BASIC),
         "ADH": Card(DIAMOND, ACE, HOLO),
@@ -90,12 +89,15 @@ def test_identify_basic_pair():
     pair_1 = Hand([c["ACP"], c["ACP"]])
     assert hs.solve_hand_type(pair_1) == HandType.PAIR
 
+
 def test_identify_pair_in_full_hand():
     """Verify that the hand solver identifies a pair in a hand with more than just the two cards"""
     c = _generate_card_fixtures()
     hs = HandSolver()
     pair_2 = Hand([c["ACP"], c["ADP"], c["3CH"], c["4CH"], c["5CH"]])
+
     assert hs.solve_hand_type(pair_2) == HandType.PAIR
+
 
 def test_identify_pair_out_of_order():
     """Verify that the hand solver can find a pair even with non-contiguous cards"""
@@ -104,6 +106,7 @@ def test_identify_pair_out_of_order():
     pair_3 = Hand([c["3CH"], c["ACP"], c["KCB"], c["QDH"], c["KSB"]])
     assert hs.solve_hand_type(pair_3) == HandType.PAIR
 
+
 def test_find_contained_pair():
     """Verify that the hand solver finds a pair in hands that contain a pair but are not a pair"""
     c = _generate_card_fixtures()
@@ -111,12 +114,14 @@ def test_find_contained_pair():
     three_of_a_kind_hand = Hand([c["KSB"], c["KDB"], c["KHB"], c["QDH"], c["JDB"]])
     assert hs.hand_contains(three_of_a_kind_hand, HandType.PAIR)
 
+
 def test_do_not_misidentify_pair():
     """Verify that the hand solver does not identify pairs when there is no pair to find"""
     c = _generate_card_fixtures()
     hs = HandSolver()
     straight_hand = Hand([c["ACP"], c["2CB"], c["3CF"], c["4CF"], c["5HP"]])
     assert hs.solve_hand_type(straight_hand) != HandType.PAIR
+
 
 def test_do_not_find_not_contained_pair():
     """Verify that the hand solver does not find a pair in a hand when there is none"""
@@ -133,12 +138,14 @@ def test_identify_two_pair():
     hand = Hand([c["KHB"], c["KCB"], c["QDB"], c["QDH"], c["2CB"]])
     assert hs.solve_hand_type(hand) == TWO_PAIR
 
+
 def test_identify_three_of_a_kind():
     """Verify that the hand solver identifies three of a kind"""
     c = _generate_card_fixtures()
     hs = HandSolver()
     hand = Hand([c["KHB"], c["KCB"], c["KSB"], c["QDB"], c["2CB"]])
     assert hs.solve_hand_type(hand) == THREE_OF_A_KIND
+
 
 def test_identify_straight_ace_low():
     """Verify that the hand solver identifies an Ace-low straight (A-2-3-4-5)"""
@@ -147,12 +154,14 @@ def test_identify_straight_ace_low():
     hand = Hand([c["ADB"], c["2CB"], c["3CH"], c["4CF"], c["5HP"]])
     assert hs.solve_hand_type(hand) == STRAIGHT
 
+
 def test_identify_straight_ace_high():
     """Verify that the hand solver identifies an Ace-high straight (10-J-Q-K-A)"""
     c = _generate_card_fixtures()
     hs = HandSolver()
-    hand = Hand([c["TDB"], c["JDB"], c["QDB"], c["KDB"], c["ADB"]])
+    hand = Hand([c["TDB"], c["JDB"], c["QDB"], c["KSB"], c["ADB"]])
     assert hs.solve_hand_type(hand) == STRAIGHT
+
 
 def test_identify_flush():
     """Verify that the hand solver identifies a flush"""
@@ -161,12 +170,14 @@ def test_identify_flush():
     hand = Hand([c["KHB"], c["QHB"], c["5HP"], c["2HB"], c["3HB"]])
     assert hs.solve_hand_type(hand) == FLUSH
 
+
 def test_identify_full_house():
     """Verify that the hand solver identifies a full house"""
     c = _generate_card_fixtures()
     hs = HandSolver()
     hand = Hand([c["KHB"], c["KCB"], c["KSB"], c["QDB"], c["QDH"]])
     assert hs.solve_hand_type(hand) == FULL_HOUSE
+
 
 def test_identify_four_of_a_kind():
     """Verify that the hand solver identifies four of a kind"""
@@ -175,12 +186,14 @@ def test_identify_four_of_a_kind():
     hand = Hand([c["KHB"], c["KCB"], c["KSB"], c["KDB"], c["QDH"]])
     assert hs.solve_hand_type(hand) == FOUR_OF_A_KIND
 
+
 def test_identify_straight_flush():
     """Verify that the hand solver identifies a straight flush (non-royal)"""
     c = _generate_card_fixtures()
     hs = HandSolver()
     hand = Hand([c["7DB"], c["8DB"], c["9DB"], c["TDB"], c["JDB"]])
     assert hs.solve_hand_type(hand) == STRAIGHT_FLUSH
+
 
 def test_identify_royal_flush():
     """Verify that the hand solver identifies a royal flush"""
@@ -190,12 +203,14 @@ def test_identify_royal_flush():
     assert hs.solve_hand_type(hand) == ROYAL_FLUSH
     assert hs.hand_contains(hand, STRAIGHT_FLUSH)
 
+
 def test_identify_five_of_a_kind():
     """Verify that the hand solver identifies five of a kind"""
     c = _generate_card_fixtures()
     hs = HandSolver()
     hand = Hand([c["KHB"], c["KCB"], c["KSB"], c["KDB"], c["KHH"]])
     assert hs.solve_hand_type(hand) == FIVE_OF_A_KIND
+
 
 def test_identify_flush_house():
     """Verify that the hand solver identifies a flush house (full house + flush)"""
@@ -204,12 +219,14 @@ def test_identify_flush_house():
     hand = Hand([c["KHB"], c["KHH"], c["KHF"], c["QHB"], c["QHH"]])
     assert hs.solve_hand_type(hand) == FLUSH_HOUSE
 
+
 def test_identify_flush_five():
     """Verify that the hand solver identifies a flush five (five identical cards)"""
     c = _generate_card_fixtures()
     hs = HandSolver()
     hand = Hand([c["ADB"], c["ADH"], c["ADF"], c["ADP"], c["ADB2"]])
     assert hs.solve_hand_type(hand) == FLUSH_FIVE
+
 
 def test_flush_not_straight_flush():
     """Verify that a flush is not mistaken for a straight flush"""
@@ -219,12 +236,14 @@ def test_flush_not_straight_flush():
     assert hs.solve_hand_type(hand) == FLUSH
     assert not hs.hand_contains(hand, STRAIGHT_FLUSH)
 
+
 def test_royal_is_straight_flush():
     """Verify that a royal flush is also a straight flush"""
     c = _generate_card_fixtures()
     hs = HandSolver()
     hand = Hand([c["TDB"], c["JDB"], c["QDB"], c["KDB"], c["ADB"]])
     assert hs.hand_contains(hand, STRAIGHT_FLUSH)
+
 
 def test_flush_house_contains_full_house_and_flush():
     """Verify that a flush house contains both full house and flush"""
